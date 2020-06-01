@@ -45,7 +45,7 @@ async function handleIconContent(iconName: string, content: string) {
 async function readIconFolderByType(iconType: string) {
   try {
     const directory = await promises.readdir(
-      join(__dirname, 'heroicons', 'dist', iconType),
+      join(__dirname, 'heroicons', iconType),
     )
     return {
       name: iconType,
@@ -57,8 +57,8 @@ async function readIconFolderByType(iconType: string) {
 }
 
 const iconFolders = [
-  readIconFolderByType('outline-md'),
-  readIconFolderByType('solid-sm'),
+  readIconFolderByType('outline'),
+  readIconFolderByType('solid'),
 ]
 
 async function main() {
@@ -67,7 +67,7 @@ async function main() {
       try {
         const iconName = toCamelSentenceWithoutSvg(icon)
         const iconContent = await promises.readFile(
-          join(__dirname, 'heroicons', 'dist', icons.name, icon),
+          join(__dirname, 'heroicons', icons.name, icon),
           'utf-8',
         )
         const newIconContent = await handleIconContent(iconName, iconContent)
