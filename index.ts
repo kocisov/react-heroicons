@@ -61,11 +61,19 @@ const iconFolders = [
   readIconFolderByType('solid'),
 ]
 
+let exportedFiles = ``
+
 async function main() {
   for await (const icons of iconFolders) {
+    await promises.mkdir(join(__dirname, 'output', icons.name), {
+      recursive: true,
+    })
     for (const icon of icons.directory) {
       try {
         const iconName = toCamelSentenceWithoutSvg(icon)
+        exportedFiles += `export { default as ${toCamelSentenceWithoutSvg(
+          `${icons.name}${iconName}`,
+        )} } from './${icons.name}/${iconName}'\n`
         const iconContent = await promises.readFile(
           join(__dirname, 'heroicons', icons.name, icon),
           'utf-8',
@@ -80,6 +88,8 @@ async function main() {
       }
     }
   }
+
+  await promises.writeFile(join(__dirname, 'output', 'index.ts'), exportedFiles)
 }
 
 main()
